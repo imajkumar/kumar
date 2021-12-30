@@ -5,6 +5,8 @@ const bcrypt = require( "bcrypt" );
 const cloudinary = require( '../cloudinary' );
 const mailer = require( "../helpers/mailer" );
 const { body, validationResult } = require( 'express-validator' );
+const SendOtp = require("sendotp");
+const sendOtp = new SendOtp("332533AhDBihu7o608ce1a0P1");
 var generateRandomNDigits = ( n ) =>
 {
     return Math.floor( Math.random() * ( 9 * Math.pow( 10, n ) ) ) + Math.pow( 10, n );
@@ -48,6 +50,9 @@ exports.checkMobileRegistered = [
 
             } else
             {
+                sendOtp.send("7703886088", "PRIIND", OTP, function (error, data) {
+                     console.log(data);
+                  });
                 //create new user 
                 const usersObj = new db.Users( {
                     phone: phone,
