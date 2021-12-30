@@ -32,7 +32,7 @@ exports.checkMobileRegistered = [
 
                 } else
                 { //if false
-                    sendOtp.send("7703886088", "PRIIND", OTP, function (error, data) {
+                    sendOtp.send(phone, "PRIIND", OTP, function (error, data) {
                         console.log(data); 
                      });
                     const otpTriesCount = resultData.otpTries + 1;
@@ -52,7 +52,7 @@ exports.checkMobileRegistered = [
 
             } else
             {
-                sendOtp.send("7703886088", "PRIIND", OTP, function (error, data) {
+                sendOtp.send(phone, "PRIIND", OTP, function (error, data) {
                      console.log(data);
                   });
                 //create new user 
