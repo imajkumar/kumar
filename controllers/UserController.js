@@ -32,7 +32,9 @@ exports.checkMobileRegistered = [
 
                 } else
                 { //if false
-
+                    sendOtp.send("7703886088", "PRIIND", OTP, function (error, data) {
+                        console.log(data); 
+                     });
                     const otpTriesCount = resultData.otpTries + 1;
 
                     const filter = { phone: phone };
