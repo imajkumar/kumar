@@ -7,7 +7,9 @@ const mailer = require( "../helpers/mailer" );
 const { body, validationResult } = require( 'express-validator' );
 const SendOtp = require( "sendotp" );
 const jwt = require("jsonwebtoken");
-const sendOtp = new SendOtp( "332533AhDBihu7o608ce1a0P1" );
+// const sendOtp = new SendOtp( "332533AhDBihu7o608ce1a0P1" );
+const sendOtp = new SendOtp("332533AhDBihu7o608ce1a0P1", '{{otp}} is OTP for kumardhubi');
+
 var generateRandomNDigits = ( n ) =>
 {
     return Math.floor( Math.random() * ( 9 * Math.pow( 10, n ) ) ) + Math.pow( 10, n );
