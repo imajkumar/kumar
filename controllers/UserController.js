@@ -5,8 +5,9 @@ const bcrypt = require( "bcrypt" );
 const cloudinary = require( '../cloudinary' );
 const mailer = require( "../helpers/mailer" );
 const { body, validationResult } = require( 'express-validator' );
-const SendOtp = require("sendotp");
-const sendOtp = new SendOtp("332533AhDBihu7o608ce1a0P1");
+const SendOtp = require( "sendotp" );
+const jwt = require("jsonwebtoken");
+const sendOtp = new SendOtp( "332533AhDBihu7o608ce1a0P1" );
 var generateRandomNDigits = ( n ) =>
 {
     return Math.floor( Math.random() * ( 9 * Math.pow( 10, n ) ) ) + Math.pow( 10, n );
@@ -32,9 +33,10 @@ exports.checkMobileRegistered = [
 
                 } else
                 { //if false
-                    sendOtp.send(phone, "PRIIND", OTP, function (error, data) {
-                        console.log(data); 
-                     });
+                    sendOtp.send( phone, "PRIIND", OTP, function ( error, data )
+                    {
+                        console.log( data );
+                    } );
                     const otpTriesCount = resultData.otpTries + 1;
 
                     const filter = { phone: phone };
@@ -52,9 +54,10 @@ exports.checkMobileRegistered = [
 
             } else
             {
-                sendOtp.send(phone, "PRIIND", OTP, function (error, data) {
-                     console.log(data);
-                  });
+                sendOtp.send( phone, "PRIIND", OTP, function ( error, data )
+                {
+                    console.log( data );
+                } );
                 //create new user 
                 const usersObj = new db.Users( {
                     phone: phone,
@@ -121,17 +124,60 @@ exports.userRegister = [
 ];
 
 //userLogin
-exports.userLogin = async ( req, res ) =>
-{
-    const errors = validationResult( req );
+exports.userLogin=[
+    async function(req,res){
+        try{
+            const errors = validationResult( req );
 
-    if ( !errors.isEmpty() )
-    {
-        return apiResponse.validationErrorWithData( res, "Validation Error.", errors.array() );
+            if ( !errors.isEmpty() )
+            {
+                return apiResponse.ErrorResponse( res, errors );
+
+
+            }
+            const resultData = await db.Users.findOne({phone : req.body.phone}).then(user => {
+                console.log(user)
+                if (user) {
+                    bcrypt.compare(req.body.password,user.password,function (err,same) {
+                        if(same){
+                           
+                                let userData = {
+                                    _id: user._id,
+                                    firstname: user.firstname,
+                                    lastname: user.lastname,
+                                    phone: user.phone,
+                                };
+                                //Prepare JWT token for authentication
+                                const jwtPayload = userData;
+                                const jwtData = {
+                                    expiresIn: process.env.JWT_TIMEOUT_DURATION,
+                                };
+                                const secret = process.env.JWT_SECRET;
+                                //Generated JWT token with Payload and secret.
+                                //userData.access_token = jwt.sign(jwtPayload, secret, jwtData);
+                                const access_token = jwt.sign(jwtPayload, secret, jwtData);
+                                const data={
+                                    access_token:access_token,
+                                    users:user
+                                }
+                                return apiResponse.successResponseWithData(res,"Login Success.", data);
+                                
+                        }else{
+                            return apiResponse.unauthorizedResponse(res, "Email or Password wrong.");
+                        }
+                    });
+
+                }else{
+                    return apiResponse.unauthorizedResponse( res, "Invalid Login Credentials", user );
+
+                }
+            });
+
+        }catch(err){
+            return apiResponse.ErrorResponse( res, err );
+        }
     }
-
-    return apiResponse.successResponseWithData( res, "Registration Success.", [] );
-}
+]
 //--userLogin
 //userUpload
 exports.userUpload = async ( req, res ) =>

@@ -28,10 +28,24 @@ const checkMobileRegistered = {
     },
    
 }
+const userLoginSchema = {
+   
+  
+    phone: {
+        notEmpty: true,
+        errorMessage: "Phone number cannot be empty"
+    },
+    password: {
+        notEmpty: true,
+        errorMessage: "Password number cannot be empty"
+    },
+   
+}
 
 
 module.exports = {
     registrationSchema,
-    checkMobileRegistered
+    checkMobileRegistered,
+    userLoginSchema
    
   };

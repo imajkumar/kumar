@@ -6,6 +6,7 @@ const {checkSchema} = require('express-validator');
 var router = express.Router();
 const {
     registrationSchema,
+    userLoginSchema,
     checkMobileRegistered   
   } = require("../routes/validator");
 
@@ -15,7 +16,7 @@ router.post("/uploadGallery", upload.array('Images',2), UserController.userUploa
 router.post("/uploadAvatar", upload.single('avatar'), UserController.userAvatar);
 
 router.post("/userRegister", UserController.userRegister);
-router.post("/userLogin",checkSchema(registrationSchema), UserController.userLogin);
+router.post("/userLogin",checkSchema(userLoginSchema), UserController.userLogin);
 router.post("/checkMobileRegistered",checkSchema(checkMobileRegistered), UserController.checkMobileRegistered);
 
 
