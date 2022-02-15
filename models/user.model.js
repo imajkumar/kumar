@@ -11,7 +11,8 @@ module.exports = mongoose =>
             verify_phone: { type: Boolean, required: true, default: 0 },
             verify_email: { type: Boolean, required: true, default: 0 },                       
             account_status: { type: Boolean, required: true, default: 1 },
-            otpTries: { type: Number, required: false, default: 0 }
+            otpTries: { type: Number, required: false, default: 0 },
+            gender:{type:String}
         },
         { timestamps: true }
     );

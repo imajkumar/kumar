@@ -15,6 +15,44 @@ var generateRandomNDigits = ( n ) =>
     return Math.floor( Math.random() * ( 9 * Math.pow( 10, n ) ) ) + Math.pow( 10, n );
 };
 
+//updateProfile
+exports.updateProfile=[
+    async function(req,res){
+        try
+        {
+            var gender = req.body.gender;
+            var user_id = req.body.user_id;
+            const resultData = await db.Users.findOne( { _id: user_id } ).exec();
+
+            if ( resultData )
+            {
+                const filter = { user_id: user_id };
+                const update = { gender: gender};
+
+                let doc = await db.Users.findOneAndUpdate( filter, update, {
+                    new: true
+                } );
+                // 59           
+                return apiResponse.successResponseWithData( res, "Updated OTO with data", doc );
+
+
+
+               
+
+            }else{
+                return apiResponse.ErrorResponse( res, 'err' );
+            }
+
+           
+
+        } catch ( err )
+        {
+            return apiResponse.ErrorResponse( res, err );
+        }
+    }
+]
+//updateProfile
+
 exports.checkMobileRegistered = [
     async function ( req, res )
     {
@@ -165,12 +203,12 @@ exports.userLogin=[
                                 return apiResponse.successResponseWithData(res,"Login Success.", data);
                                 
                         }else{
-                            return apiResponse.unauthorizedResponse(res, "Email or Password wrong.");
+                            return apiResponse.unauthorizedResponse(res, "1Invalid Login Crredentials");
                         }
                     });
 
                 }else{
-                    return apiResponse.unauthorizedResponse( res, "Invalid Login Credentials", user );
+                    return apiResponse.unauthorizedResponse( res, "2Invalid Login Credentials", user );
 
                 }
             });
