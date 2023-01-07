@@ -8,7 +8,7 @@ const { body, validationResult } = require( 'express-validator' );
 const SendOtp = require( "sendotp" );
 const jwt = require("jsonwebtoken");
 // const sendOtp = new SendOtp( "332533AhDBihu7o608ce1a0P1" );
-const sendOtp = new SendOtp("332533AhDBihu7o608ce1a0P1", '{{otp}} is OTP for kumardhubi');
+const sendOtp = new SendOtp("332216AFvgqqc248D163b933dfP1", '{{otp}} is OTP for kumardhubi');
 
 var generateRandomNDigits = ( n ) =>
 {
@@ -73,7 +73,7 @@ exports.checkMobileRegistered = [
 
                 } else
                 { //if false
-                    sendOtp.send( phone, "PRIIND", OTP, function ( error, data )
+                    sendOtp.send( phone, "KUMARD", OTP, function ( error, data )
                     {
                         console.log( data );
                     } );
@@ -176,15 +176,14 @@ exports.userLogin=[
 
             }
             const resultData = await db.Users.findOne({phone : req.body.phone}).then(user => {
-                console.log(user)
+                console.log('user')
                 if (user) {
                     bcrypt.compare(req.body.password,user.password,function (err,same) {
                         if(same){
                            
                                 let userData = {
                                     _id: user._id,
-                                    firstname: user.firstname,
-                                    lastname: user.lastname,
+                                    firstname: user.name,
                                     phone: user.phone,
                                 };
                                 //Prepare JWT token for authentication
