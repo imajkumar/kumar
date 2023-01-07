@@ -11,11 +11,11 @@ const {
   } = require("../routes/validator");
 
   
-//router.post("/userLogin", UserController.userLogin);
+
 router.post("/uploadGallery", upload.array('Images',2), UserController.userUpload);
 router.post("/uploadAvatar", upload.single('avatar'), UserController.userAvatar);
 
-router.post("/userRegister", UserController.userRegister);
+router.post("/userRegister", UserController.userRegister); //user logic
 router.post("/userLogin",checkSchema(userLoginSchema), UserController.userLogin);
 router.post("/checkMobileRegistered",checkSchema(checkMobileRegistered), UserController.checkMobileRegistered);
 router.post("/updateProfile", UserController.updateProfile);
